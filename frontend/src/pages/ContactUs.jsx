@@ -24,8 +24,8 @@ export default function ContactUs() {
               <Phone size={30} />
             </div>
             <h3 style={{ fontSize: '1.5rem', marginBottom: '8px' }}>Phone / WhatsApp</h3>
-            <a href="https://wa.me/918148112924" target="_blank" rel="noreferrer" style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', textDecoration: 'underline' }}>
-              +91 81481 12924
+            <a href="https://wa.me/919787698174" target="_blank" rel="noreferrer" style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', textDecoration: 'underline' }}>
+              +91 97876 98174
             </a>
           </div>
 

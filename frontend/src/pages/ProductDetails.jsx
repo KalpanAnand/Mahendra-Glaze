@@ -162,7 +162,7 @@ export default function ProductDetails() {
               style={{ width: '100%', backgroundColor: '#25D366', color: 'white', border: 'none', padding: '16px', fontSize: '1.2rem', display: 'flex', justifyContent: 'center' }}
               onClick={() => {
                 const message = `Hello Mahendra Glaze, I would like to place an order for a specific style:%0A%0A1x ${product.name} - ₹${product.price.toFixed(2)}%0AStyle Image: ${fullScreenImage.imageUrl}%0A%0ATotal: ₹${product.price.toFixed(2)}`;
-                window.open(`https://wa.me/918148112924?text=${message}`, '_blank');
+                window.open(`https://wa.me/919787698174?text=${message}`, '_blank');
               }}
             >
               <MessageCircle size={20} /> Buy Now

@@ -28,7 +28,7 @@ export default function CartSidebar({ isOpen, onClose }) {
     
     setCartItems([]);
     onClose();
-    window.open(`https://wa.me/918148112924?text=${message}`, '_blank');
+    window.open(`https://wa.me/919787698174?text=${message}`, '_blank');
   };
 
   if (!isOpen) return null;

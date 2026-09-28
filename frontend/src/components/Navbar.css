@@ -12,6 +12,10 @@
   border-top: none;
 }
 
+.navbar .container {
+  max-width: 1440px; /* Wider container just for the navbar to push the logo left */
+}
+
 .nav-content {
   height: 80px;
 }

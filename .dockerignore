@@ -1,0 +1,8 @@
+.git
+.github
+frontend
+**/target
+**/.idea
+**/.vscode
+**/*.md
+backend/dummy.jpg

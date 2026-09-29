@@ -4,11 +4,18 @@
   display: flex;
   align-items: center;
   position: relative;
-  background-image: url('https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&q=80&w=2000');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  padding-top: 80px; /* Offset for navbar */
+  padding-top: 80px;
+  overflow: hidden;
+}
+
+.hero-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
 }
 
 .hero-overlay {
@@ -163,12 +170,40 @@
 
 @media (max-width: 768px) {
   .hero {
-    background-attachment: scroll;
-    min-height: 70vh;
+    min-height: unset;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: visible;
+    padding-top: 88px;
+    padding-bottom: 0;
+  }
+
+  .hero-photo {
+    position: relative;
+    inset: auto;
+    order: 2;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    object-position: center bottom;
+    display: block;
+  }
+
+  .hero-overlay {
+    display: none;
+  }
+
+  .hero-content {
+    order: 1;
+    padding: 24px 16px 16px;
+    max-width: none;
   }
 
   .hero-title {
-    font-size: 2.8rem;
+    font-size: 2.2rem;
   }
   .hero-subtitle {
     font-size: 1rem;

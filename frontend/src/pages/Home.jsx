@@ -9,6 +9,12 @@ export default function Home() {
     <div className="home-page animate-fade-in">
       {/* Hero Section */}
       <section className="hero">
+        <img
+          className="hero-photo"
+          src="https://images.unsplash.com/photo-1577803645773-f96470509666?auto=format&fit=crop&q=80&w=2000"
+          alt="Premium eyewear"
+        />
+        <div className="hero-overlay"></div>
         <div className="container hero-content">
           <h1 className="hero-title">
             See the World in <br />
@@ -23,7 +29,6 @@ export default function Home() {
             </button>
           </div>
         </div>
-        <div className="hero-overlay"></div>
       </section>
     </div>
   );

@@ -24,7 +24,8 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="container flex-between nav-content">
         <Link to="/" className="nav-brand heading-gradient">
-          Mahendra Glaze
+          <span>Mahendra</span>
+          <span>Glaze</span>
         </Link>
 
         <div className="nav-links">

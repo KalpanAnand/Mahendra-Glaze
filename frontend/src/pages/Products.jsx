@@ -37,7 +37,11 @@ export default function Products({ defaultCategory = null }) {
       })
       .then(data => {
         const list = Array.isArray(data) ? data : [];
-        if (list.length === 1 && !search && !defaultCategory) {
+        const skipListing =
+          !search &&
+          list.length > 0 &&
+          (defaultCategory === 'SUNGLASSES' || defaultCategory === 'MAGNETIC_GLASSES');
+        if (skipListing) {
           navigate(`/products/${list[0].id}`, { replace: true });
         } else {
           setProducts(list);

@@ -28,7 +28,10 @@ export default function AdminLogin() {
         body: JSON.stringify({ email, password })
       });
 
-      if (!res.ok) throw new Error('Invalid credentials. Use admin@eyewear.com / admin123 after the latest Render deploy.');
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || `Login failed (${res.status}). Wait for Render to finish deploying, then try again.`);
+      }
       
       const data = await res.json();
       // Store token securely (in real app use more secure methods, but this works for our V1)

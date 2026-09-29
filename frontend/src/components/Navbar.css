@@ -5,11 +5,12 @@
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 200;
   border-radius: 0;
   border-left: none;
   border-right: none;
   border-top: none;
+  background: #FCFAF8;
 }
 
 .navbar .container {
@@ -100,30 +101,54 @@
   .nav-links {
     display: none;
   }
+
+  .navbar .container {
+    padding-left: 16px;
+    padding-right: 20px;
+  }
+
+  .nav-content {
+    height: 72px;
+  }
+
+  .nav-actions {
+    gap: 4px;
+    padding-right: 12px;
+  }
+
+  .admin-btn {
+    display: none;
+  }
+
   .mobile-menu {
     display: flex;
+    margin-right: 4px;
   }
 }
 
 .mobile-nav-dropdown {
-  background: var(--bg-surface);
-  border-top: 1px solid var(--border-subtle);
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   position: absolute;
   top: 100%;
   left: 0;
+  right: 0;
   width: 100%;
+  background: #FCFAF8;
+  border-top: 1px solid var(--border-subtle);
+  box-shadow: 0 12px 24px rgba(66, 39, 1, 0.12);
+  display: flex;
+  flex-direction: column;
+  padding: 8px 16px 16px;
+  z-index: 201;
 }
 
 .mobile-nav-dropdown a {
-  padding: 12px 0;
+  padding: 14px 8px;
   color: var(--text-primary);
   font-weight: 500;
+  font-size: 1rem;
   text-decoration: none;
   border-bottom: 1px solid var(--border-subtle);
+  background: #FCFAF8;
 }
 
 .mobile-nav-dropdown a:last-child {

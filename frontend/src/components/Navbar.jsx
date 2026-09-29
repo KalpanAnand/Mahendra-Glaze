@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ShoppingBag, Menu, User, Phone } from 'lucide-react';
+import { Search, ShoppingBag, Menu, X, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './Navbar.css';
 
@@ -21,9 +21,9 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="navbar glass-panel">
+    <nav className="navbar">
       <div className="container flex-between nav-content">
-        <Link to="/" className="nav-brand heading-gradient" style={{fontSize: '1.8rem', fontWeight: 'bold'}}>
+        <Link to="/" className="nav-brand heading-gradient">
           Mahendra Glaze
         </Link>
 
@@ -51,13 +51,17 @@ export default function Navbar() {
             <button className="icon-btn" onClick={() => setShowSearch(true)}><Search size={20} /></button>
           )}
           
-          <button className="icon-btn" onClick={() => navigate('/admin')} title="Admin Login"><User size={20} /></button>
+          <button className="icon-btn admin-btn" onClick={() => navigate('/admin')} title="Admin Login"><User size={20} /></button>
           <button className="icon-btn cart-btn" onClick={() => setIsCartOpen(true)}>
             <ShoppingBag size={20} />
             <span className="cart-badge">{cartCount}</span>
           </button>
-          <button className="icon-btn mobile-menu" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            <Menu size={24} />
+          <button
+            className="icon-btn mobile-menu"
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>

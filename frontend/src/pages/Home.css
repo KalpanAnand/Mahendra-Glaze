@@ -37,7 +37,7 @@
   position: relative;
   z-index: 2;
   max-width: 600px;
-  margin-left: 0; /* Keep it aligned to container left */
+  margin-left: 0;
 }
 
 .hero-title {
@@ -45,6 +45,7 @@
   font-weight: 700;
   line-height: 1.1;
   margin-bottom: 24px;
+  color: #2A1600;
 }
 
 .hero-subtitle {
@@ -193,18 +194,22 @@
     display: block;
     background: linear-gradient(
       to top,
-      rgba(252, 250, 248, 0.92) 0%,
-      rgba(252, 250, 248, 0.55) 42%,
-      rgba(252, 250, 248, 0.12) 100%
+      rgba(252, 250, 248, 0.96) 0%,
+      rgba(252, 250, 248, 0.72) 38%,
+      rgba(252, 250, 248, 0.2) 70%,
+      rgba(252, 250, 248, 0.05) 100%
     );
   }
 
   .hero-content {
-    padding: 0 20px;
+    padding: 28px 20px;
     max-width: none;
-    width: 100%;
+    width: calc(100% - 32px);
     text-align: center;
     margin: 0 auto;
+    background: rgba(252, 250, 248, 0.92);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(42, 22, 0, 0.12);
   }
 
   .hero-actions {
@@ -212,11 +217,17 @@
   }
 
   .hero-title {
-    font-size: 2.2rem;
+    font-size: 2rem;
+    color: #2A1600;
+    -webkit-text-fill-color: #2A1600;
+    background: none;
   }
+
   .hero-subtitle {
     font-size: 1rem;
     margin-bottom: 24px;
+    color: #4A3418;
+    font-weight: 500;
   }
   .hero-actions .btn {
     padding: 12px 24px;

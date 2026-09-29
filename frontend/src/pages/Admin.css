@@ -129,22 +129,25 @@
   align-items: stretch;
 }
 
-.file-picker {
+.file-input-visible {
   display: block;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 14px 12px;
+  background: #ffffff;
+  border: 1px dashed #705E46;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #422701;
+  font-family: inherit;
 }
 
-.file-picker input[type="file"] {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  overflow: hidden;
-}
-
-.file-picker-btn {
-  width: 100%;
-  justify-content: center;
+.file-selected-count {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .upload-actions {

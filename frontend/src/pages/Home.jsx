@@ -18,7 +18,7 @@ export default function Home() {
         <div className="container hero-content">
           <h1 className="hero-title">
             See the World in <br />
-            <span className="heading-gradient">Perfect Clarity.</span>
+            Perfect Clarity.
           </h1>
           <p className="hero-subtitle">
             Premium eyewear designed for the modern individual. Experience unparalleled comfort and style with our exclusive collection.

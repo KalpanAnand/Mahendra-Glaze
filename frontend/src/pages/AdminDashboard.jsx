@@ -235,20 +235,17 @@ export default function AdminDashboard() {
           <div className="admin-form-card glass-panel">
             <h3>Upload Images for Product ID: {selectedProductForImage}</h3>
             <form onSubmit={handleImageUpload} className="upload-form">
-              <label className="file-picker">
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={(e) => setImageFiles(e.target.files)}
-                  required
-                />
-                <span className="btn btn-outline file-picker-btn">
-                  {imageFiles && imageFiles.length > 0
-                    ? `${imageFiles.length} file${imageFiles.length > 1 ? 's' : ''} selected`
-                    : 'Choose images'}
-                </span>
-              </label>
+              <input
+                type="file"
+                className="file-input-visible"
+                accept="image/*"
+                multiple
+                onChange={(e) => setImageFiles(e.target.files)}
+                required
+              />
+              {imageFiles && imageFiles.length > 0 && (
+                <p className="file-selected-count">{imageFiles.length} image{imageFiles.length > 1 ? 's' : ''} selected</p>
+              )}
               <div className="upload-actions">
                 <button type="submit" className="btn btn-primary" disabled={isUploading}>
                   {isUploading ? 'Uploading...' : 'Upload to Cloudinary'}

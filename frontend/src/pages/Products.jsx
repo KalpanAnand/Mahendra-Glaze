@@ -31,17 +31,22 @@ export default function Products({ defaultCategory = null }) {
     }
 
     fetch(url)
-      .then(res => res.json())
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`API ${res.status}`);
+        return res.json();
+      })
       .then(data => {
-        if (data.length === 1 && !search) {
-          navigate(`/products/${data[0].id}`, { replace: true });
+        const list = Array.isArray(data) ? data : [];
+        if (list.length === 1 && !search && !defaultCategory) {
+          navigate(`/products/${list[0].id}`, { replace: true });
         } else {
-          setProducts(data);
+          setProducts(list);
           setLoading(false);
         }
       })
       .catch(err => {
         console.error("Failed to fetch products:", err);
+        setProducts([]);
         setLoading(false);
       });
   }, [defaultCategory, search, location.search]);

@@ -162,6 +162,11 @@
 }
 
 @media (max-width: 768px) {
+  .hero {
+    background-attachment: scroll;
+    min-height: 70vh;
+  }
+
   .hero-title {
     font-size: 2.8rem;
   }

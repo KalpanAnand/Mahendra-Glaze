@@ -17,13 +17,18 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      const res = await fetch(`${API_BASE}/api/auth/login`, {
+      const apiBase = API_BASE.replace(/\/$/, '');
+      if (window.location.hostname.includes('vercel.app') && (!apiBase || apiBase.includes('localhost'))) {
+        throw new Error('API is not connected. Set VITE_API_URL on Vercel to your Render URL, then Redeploy.');
+      }
+
+      const res = await fetch(`${apiBase}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
 
-      if (!res.ok) throw new Error('Invalid credentials');
+      if (!res.ok) throw new Error('Invalid credentials. Use admin@eyewear.com / admin123 after the latest Render deploy.');
       
       const data = await res.json();
       // Store token securely (in real app use more secure methods, but this works for our V1)

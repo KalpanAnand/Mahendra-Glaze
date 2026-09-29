@@ -17,7 +17,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*") // Allows React frontend to connect locally
 public class ProductController {
 
     private final ProductService productService;

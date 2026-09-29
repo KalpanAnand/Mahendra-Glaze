@@ -313,7 +313,7 @@ export default function AdminDashboard() {
               )}
               <div className="upload-actions">
                 <button type="submit" className="btn btn-primary" disabled={isUploading}>
-                  {isUploading ? 'Uploading...' : 'Upload to Cloudinary'}
+                  {isUploading ? 'Uploading...' : 'Upload'}
                 </button>
                 <button type="button" className="btn btn-outline" onClick={() => { setSelectedProductForImage(null); setImageFiles([]); }} disabled={isUploading}>Close</button>
               </div>

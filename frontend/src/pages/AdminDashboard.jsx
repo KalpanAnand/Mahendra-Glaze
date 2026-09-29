@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Plus, Image as ImageIcon, Edit2, Trash2, CheckCircle, AlertCircle } from 'lucide-react';
+import { API_BASE } from '../api';
 import './Admin.css';
 
 export default function AdminDashboard() {
@@ -40,7 +41,7 @@ export default function AdminDashboard() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/products');
+      const res = await fetch(`${API_BASE}/api/products`);
       const data = await res.json();
       setProducts(data);
     } catch (err) {
@@ -59,8 +60,8 @@ export default function AdminDashboard() {
     e.preventDefault();
     try {
       const url = editingId 
-        ? `http://localhost:8080/api/products/admin/${editingId}`
-        : 'http://localhost:8080/api/products/admin';
+        ? `${API_BASE}/api/products/admin/${editingId}`
+        : `${API_BASE}/api/products/admin`;
       const method = editingId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -105,7 +106,7 @@ export default function AdminDashboard() {
   const confirmDeleteProduct = async () => {
     if (!productToDelete) return;
     try {
-      const res = await fetch(`http://localhost:8080/api/products/admin/${productToDelete}`, {
+      const res = await fetch(`${API_BASE}/api/products/admin/${productToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -137,7 +138,7 @@ export default function AdminDashboard() {
         formData.append('file', file);
         formData.append('isPrimary', false); // Can change logic here if needed
 
-        const res = await fetch(`http://localhost:8080/api/products/admin/${selectedProductForImage}/image`, {
+        const res = await fetch(`${API_BASE}/api/products/admin/${selectedProductForImage}/image`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`

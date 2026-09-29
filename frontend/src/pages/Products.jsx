@@ -3,6 +3,7 @@ import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { Filter, ChevronDown, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { optimizeImageUrl } from '../utils/image';
+import { API_BASE } from '../api';
 import './Products.css';
 
 export default function Products({ defaultCategory = null }) {
@@ -20,7 +21,7 @@ export default function Products({ defaultCategory = null }) {
 
   useEffect(() => {
     setLoading(true);
-    let url = 'http://localhost:8080/api/products';
+    let url = `${API_BASE}/api/products`;
     
     // Add query parameters based on route or search bar
     if (search) {

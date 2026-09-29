@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingBag, MessageCircle, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { optimizeImageUrl } from '../utils/image';
+import { API_BASE } from '../api';
 import './ProductDetails.css';
 
 export default function ProductDetails() {
@@ -23,7 +24,7 @@ export default function ProductDetails() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/products/${id}`)
+    fetch(`${API_BASE}/api/products/${id}`)
       .then(res => {
         if (!res.ok) throw new Error("Not Found");
         return res.json();

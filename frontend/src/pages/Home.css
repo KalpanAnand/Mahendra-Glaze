@@ -170,35 +170,36 @@
 
 @media (max-width: 768px) {
   .hero {
-    min-height: unset;
-    height: auto;
+    min-height: 100svh;
+    height: 100svh;
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    overflow: visible;
-    padding-top: 88px;
-    padding-bottom: 0;
+    align-items: flex-end;
+    overflow: hidden;
+    padding-top: 72px;
+    padding-bottom: 32px;
   }
 
   .hero-photo {
-    position: relative;
-    inset: auto;
-    order: 2;
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: auto;
-    max-height: none;
-    object-fit: contain;
-    object-position: center bottom;
-    display: block;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
   }
 
   .hero-overlay {
-    display: none;
+    display: block;
+    background: linear-gradient(
+      to top,
+      rgba(252, 250, 248, 0.92) 0%,
+      rgba(252, 250, 248, 0.55) 42%,
+      rgba(252, 250, 248, 0.12) 100%
+    );
   }
 
   .hero-content {
-    order: 1;
-    padding: 24px 16px 16px;
+    padding: 0 16px 8px;
     max-width: none;
   }
 

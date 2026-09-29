@@ -24,7 +24,7 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      <div className="container flex-between nav-content">
+      <div className="container nav-content">
         <Link to="/" className="nav-brand heading-gradient" style={{ visibility: isHomePage ? 'hidden' : 'visible' }}>
           <span>Mahendra</span>
           <span>Glaze</span>

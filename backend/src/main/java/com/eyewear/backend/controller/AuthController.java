@@ -27,14 +27,14 @@ public class AuthController {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
+                            request.email(),
+                            request.password()
                     )
             );
         } catch (BadCredentialsException | UsernameNotFoundException ex) {
             return ResponseEntity.status(401).build();
         }
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.email());
         final String jwtToken = jwtService.generateToken(userDetails);
 
         return ResponseEntity.ok(AuthResponse.builder().token(jwtToken).build());

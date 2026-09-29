@@ -19,8 +19,8 @@
 
 .nav-content {
   height: 80px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -35,6 +35,8 @@
   text-shadow: 0 2px 4px rgba(0,0,0,0.1);
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  flex: 1;
   line-height: 1.1;
 }
 
@@ -47,6 +49,7 @@
   gap: 16px;
   align-items: center;
   justify-content: flex-end;
+  flex: 1;
 }
 
 .nav-links {

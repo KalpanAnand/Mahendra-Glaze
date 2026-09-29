@@ -173,10 +173,11 @@
     min-height: 100svh;
     height: 100svh;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
     padding-top: 72px;
-    padding-bottom: 32px;
+    padding-bottom: 24px;
   }
 
   .hero-photo {
@@ -199,8 +200,15 @@
   }
 
   .hero-content {
-    padding: 0 16px 8px;
+    padding: 0 20px;
     max-width: none;
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .hero-actions {
+    justify-content: center;
   }
 
   .hero-title {

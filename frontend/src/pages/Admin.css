@@ -111,14 +111,50 @@
   gap: 16px;
 }
 
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
 .mt-3 {
   margin-top: 16px;
 }
 
 .upload-form {
   display: flex;
+  flex-direction: column;
   gap: 16px;
-  align-items: center;
+  align-items: stretch;
+}
+
+.file-picker {
+  display: block;
+  width: 100%;
+}
+
+.file-picker input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.file-picker-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.upload-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.upload-actions .btn {
+  flex: 1 1 auto;
 }
 
 /* Admin Table */
@@ -165,7 +201,22 @@
 }
 
 @media (max-width: 768px) {
+  .admin-dashboard {
+    padding-top: 96px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .admin-form-card {
+    padding: 16px;
+  }
+
+  .form-actions .btn,
+  .upload-actions .btn {
+    width: 100%;
   }
 }

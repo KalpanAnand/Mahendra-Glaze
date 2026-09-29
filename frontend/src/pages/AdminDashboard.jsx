@@ -209,7 +209,7 @@ export default function AdminDashboard() {
                 <input type="number" step="0.01" className="input-field" placeholder="Price (₹)" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} required />
               </div>
               <textarea className="input-field mt-3" placeholder="Description" rows="3" value={newProduct.description} onChange={e => setNewProduct({...newProduct, description: e.target.value})} required></textarea>
-              <div className="flex" style={{ gap: '10px', marginTop: '16px' }}>
+              <div className="form-actions">
                 <button type="submit" className="btn btn-primary">{editingId ? "Update Product" : "Save Product"}</button>
                 <button type="button" className="btn btn-outline" onClick={() => setShowAddForm(false)}>Cancel</button>
               </div>
@@ -235,11 +235,26 @@ export default function AdminDashboard() {
           <div className="admin-form-card glass-panel">
             <h3>Upload Images for Product ID: {selectedProductForImage}</h3>
             <form onSubmit={handleImageUpload} className="upload-form">
-              <input type="file" className="input-field" accept="image/*" multiple onChange={(e) => setImageFiles(e.target.files)} required />
-              <button type="submit" className="btn btn-primary" disabled={isUploading}>
-                {isUploading ? 'Uploading...' : 'Upload to Cloudinary'}
-              </button>
-              <button type="button" className="btn btn-outline" onClick={() => setSelectedProductForImage(null)} disabled={isUploading}>Cancel</button>
+              <label className="file-picker">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => setImageFiles(e.target.files)}
+                  required
+                />
+                <span className="btn btn-outline file-picker-btn">
+                  {imageFiles && imageFiles.length > 0
+                    ? `${imageFiles.length} file${imageFiles.length > 1 ? 's' : ''} selected`
+                    : 'Choose images'}
+                </span>
+              </label>
+              <div className="upload-actions">
+                <button type="submit" className="btn btn-primary" disabled={isUploading}>
+                  {isUploading ? 'Uploading...' : 'Upload to Cloudinary'}
+                </button>
+                <button type="button" className="btn btn-outline" onClick={() => setSelectedProductForImage(null)} disabled={isUploading}>Cancel</button>
+              </div>
             </form>
           </div>
         )}

@@ -119,6 +119,8 @@
   }
 
   .nav-content {
+    display: flex;
+    justify-content: space-between;
     height: auto;
     min-height: 64px;
     padding: 8px 0;

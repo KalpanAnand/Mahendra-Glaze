@@ -53,8 +53,6 @@ export default function Navbar() {
           ) : (
             <button className="icon-btn" onClick={() => setShowSearch(true)}><Search size={20} /></button>
           )}
-          
-          <button className="icon-btn admin-btn" onClick={() => navigate('/admin')} title="Admin Login"><User size={20} /></button>
           <button className="icon-btn cart-btn" onClick={() => setIsCartOpen(true)}>
             <ShoppingBag size={20} />
             <span className="cart-badge">{cartCount}</span>

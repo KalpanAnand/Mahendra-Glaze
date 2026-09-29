@@ -100,4 +100,24 @@ public class ProductController {
             }
         }).orElse(ResponseEntity.notFound().build());
     }
+
+    @DeleteMapping("/admin/{id}/images")
+    public ResponseEntity<Void> deleteAllProductImages(@PathVariable Integer id) {
+        return productService.getProductById(id).map(product -> {
+            List<ProductImage> images = product.getImages();
+            if (images != null && !images.isEmpty()) {
+                productImageRepository.deleteAll(images);
+            }
+            return ResponseEntity.ok().<Void>build();
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/admin/image/{imageId}")
+    public ResponseEntity<Void> deleteProductImage(@PathVariable Integer imageId) {
+        if (productImageRepository.existsById(imageId)) {
+            productImageRepository.deleteById(imageId);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

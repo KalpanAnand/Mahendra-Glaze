@@ -166,6 +166,44 @@ export default function AdminDashboard() {
       setIsUploading(false);
     }
   };
+
+  const handleDeleteImage = async (imageId) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/products/admin/image/${imageId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        showToast("Image deleted successfully!");
+        fetchProducts();
+      } else {
+        showToast("Failed to delete image.", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Error deleting image.", "error");
+    }
+  };
+
+  const handleDeleteAllImages = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/products/admin/${selectedProductForImage}/images`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        showToast("All images deleted successfully!");
+        fetchProducts();
+      } else {
+        showToast("Failed to delete all images.", "error");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Error deleting all images.", "error");
+    }
+  };
+
+  const activeProduct = products.find(p => p.id === selectedProductForImage);
   return (
     <div className="admin-dashboard animate-fade-in">
       <div className="container">
@@ -233,8 +271,35 @@ export default function AdminDashboard() {
 
         {selectedProductForImage && (
           <div className="admin-form-card glass-panel">
-            <h3>Upload Images for Product ID: {selectedProductForImage}</h3>
-            <form onSubmit={handleImageUpload} className="upload-form">
+            <h3>Manage Images for Product ID: {selectedProductForImage}</h3>
+            
+            {activeProduct && activeProduct.images && activeProduct.images.length > 0 && (
+              <div style={{ marginBottom: '24px' }}>
+                <div className="flex-between" style={{ marginBottom: '16px' }}>
+                  <h4 style={{ margin: 0 }}>Existing Images ({activeProduct.images.length})</h4>
+                  <button className="btn btn-outline" style={{ borderColor: '#ff4757', color: '#ff4757', padding: '6px 12px', fontSize: '0.9rem' }} onClick={handleDeleteAllImages}>
+                    Delete All
+                  </button>
+                </div>
+                <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px' }}>
+                  {activeProduct.images.map(img => (
+                    <div key={img.id} style={{ position: 'relative', width: '100px', height: '100px', flexShrink: 0 }}>
+                      <img src={img.imageUrl} alt="product" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                      <button 
+                        onClick={() => handleDeleteImage(img.id)}
+                        style={{ position: 'absolute', top: '4px', right: '4px', background: '#ff4757', color: 'white', border: 'none', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                        title="Delete this image"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <form onSubmit={handleImageUpload} className="upload-form" style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '20px' }}>
+              <h4 style={{ marginBottom: '16px' }}>Upload New Images</h4>
               <input
                 type="file"
                 className="file-input-visible"
@@ -250,7 +315,7 @@ export default function AdminDashboard() {
                 <button type="submit" className="btn btn-primary" disabled={isUploading}>
                   {isUploading ? 'Uploading...' : 'Upload to Cloudinary'}
                 </button>
-                <button type="button" className="btn btn-outline" onClick={() => setSelectedProductForImage(null)} disabled={isUploading}>Cancel</button>
+                <button type="button" className="btn btn-outline" onClick={() => { setSelectedProductForImage(null); setImageFiles([]); }} disabled={isUploading}>Close</button>
               </div>
             </form>
           </div>

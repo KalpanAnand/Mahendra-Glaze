@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Search, ShoppingBag, Menu, X, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './Navbar.css';
@@ -10,6 +10,8 @@ export default function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -23,7 +25,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="container flex-between nav-content">
-        <Link to="/" className="nav-brand heading-gradient">
+        <Link to="/" className="nav-brand heading-gradient" style={{ visibility: isHomePage ? 'hidden' : 'visible' }}>
           <span>Mahendra</span>
           <span>Glaze</span>
         </Link>

@@ -17,7 +17,7 @@ export default function Home() {
         <div className="hero-overlay"></div>
         <div className="container hero-content">
           <h1 className="hero-title" style={{ fontFamily: "'Cinzel Decorative', serif", textTransform: 'uppercase' }}>
-            Mahendra Glaze
+            MAHENDRA GLAZE
           </h1>
           <p className="hero-subtitle">
             Premium eyewear designed for the modern individual. Experience unparalleled comfort and style with our exclusive collection.

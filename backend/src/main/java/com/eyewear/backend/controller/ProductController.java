@@ -4,12 +4,10 @@ import com.eyewear.backend.entity.Product;
 import com.eyewear.backend.service.ProductService;
 import com.eyewear.backend.entity.ProductImage;
 import com.eyewear.backend.repository.ProductImageRepository;
-import com.eyewear.backend.service.ImageUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +18,6 @@ import java.util.Map;
 public class ProductController {
 
     private final ProductService productService;
-    private final ImageUploadService imageUploadService;
     private final ProductImageRepository productImageRepository;
 
     @GetMapping
@@ -84,21 +81,24 @@ public class ProductController {
             @PathVariable Integer id,
             @RequestParam("file") MultipartFile file,
             @RequestParam(defaultValue = "false") Boolean isPrimary) {
-        
-        return productService.getProductById(id).map(product -> {
-            try {
-                String imageUrl = imageUploadService.uploadImage(file);
-                ProductImage productImage = ProductImage.builder()
-                        .product(product)
-                        .imageUrl(imageUrl)
-                        .isPrimary(isPrimary)
-                        .build();
-                return ResponseEntity.ok(productImageRepository.save(productImage));
-            } catch (Exception e) {
-                e.printStackTrace();
-                return ResponseEntity.internalServerError().<ProductImage>build();
-            }
-        }).orElse(ResponseEntity.notFound().build());
+        try {
+            return ResponseEntity.ok(productService.addProductImage(id, file, isPrimary));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PatchMapping("/admin/image/{imageId}/primary")
+    public ResponseEntity<Void> setPrimaryImage(@PathVariable Integer imageId) {
+        try {
+            productService.setPrimaryImage(imageId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/admin/{id}/images")
@@ -114,10 +114,11 @@ public class ProductController {
 
     @DeleteMapping("/admin/image/{imageId}")
     public ResponseEntity<Void> deleteProductImage(@PathVariable Integer imageId) {
-        if (productImageRepository.existsById(imageId)) {
-            productImageRepository.deleteById(imageId);
+        try {
+            productService.deleteProductImage(imageId);
             return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 }

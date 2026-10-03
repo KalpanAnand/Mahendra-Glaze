@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Plus, Image as ImageIcon, Edit2, Trash2, CheckCircle, AlertCircle } from 'lucide-react';
 import { API_BASE } from '../api';
+import { optimizeImageUrl } from '../utils/image';
 import './Admin.css';
 
 export default function AdminDashboard() {
@@ -133,10 +134,14 @@ export default function AdminDashboard() {
     let successCount = 0;
 
     try {
-      const uploadPromises = Array.from(imageFiles).map(async (file) => {
+      const product = products.find((p) => p.id === selectedProductForImage);
+      const hasPrimary = product?.images?.some((img) => img.isPrimary);
+      const files = Array.from(imageFiles);
+
+      for (let i = 0; i < files.length; i++) {
         const formData = new FormData();
-        formData.append('file', file);
-        formData.append('isPrimary', false); // Can change logic here if needed
+        formData.append('file', files[i]);
+        formData.append('isPrimary', !hasPrimary && i === 0);
 
         const res = await fetch(`${API_BASE}/api/products/admin/${selectedProductForImage}/image`, {
           method: 'POST',
@@ -145,11 +150,9 @@ export default function AdminDashboard() {
           },
           body: formData
         });
-        
-        if (res.ok) successCount++;
-      });
 
-      await Promise.all(uploadPromises);
+        if (res.ok) successCount++;
+      }
 
       if (successCount > 0) {
         showToast(`${successCount} image(s) uploaded successfully!`);
@@ -164,6 +167,24 @@ export default function AdminDashboard() {
       showToast("An error occurred during upload.", "error");
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleSetPrimaryImage = async (imageId) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/products/admin/image/${imageId}/primary`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        showToast('Primary image updated!');
+        fetchProducts();
+      } else {
+        showToast('Failed to set primary image.', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Error setting primary image.', 'error');
     }
   };
 
@@ -284,7 +305,21 @@ export default function AdminDashboard() {
                 <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px' }}>
                   {activeProduct.images.map(img => (
                     <div key={img.id} style={{ position: 'relative', width: '100px', height: '100px', flexShrink: 0 }}>
-                      <img src={img.imageUrl} alt="product" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                      <img src={optimizeImageUrl(img.imageUrl, 200)} alt="product" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                      {img.isPrimary && (
+                        <span style={{ position: 'absolute', bottom: '4px', left: '4px', background: '#2ed573', color: 'white', fontSize: '0.65rem', padding: '2px 6px', borderRadius: '4px' }}>
+                          Primary
+                        </span>
+                      )}
+                      {!img.isPrimary && (
+                        <button
+                          onClick={() => handleSetPrimaryImage(img.id)}
+                          style={{ position: 'absolute', bottom: '4px', left: '4px', background: 'rgba(0,0,0,0.7)', color: 'white', border: 'none', borderRadius: '4px', fontSize: '0.65rem', padding: '2px 6px', cursor: 'pointer' }}
+                          title="Set as primary image"
+                        >
+                          Set Primary
+                        </button>
+                      )}
                       <button 
                         onClick={() => handleDeleteImage(img.id)}
                         style={{ position: 'absolute', top: '4px', right: '4px', background: '#ff4757', color: 'white', border: 'none', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}

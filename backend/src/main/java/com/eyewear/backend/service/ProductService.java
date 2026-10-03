@@ -1,11 +1,16 @@
 package com.eyewear.backend.service;
 
 import com.eyewear.backend.entity.Product;
+import com.eyewear.backend.entity.ProductImage;
+import com.eyewear.backend.repository.ProductImageRepository;
 import com.eyewear.backend.repository.ProductRepository;
+import com.eyewear.backend.service.ImageUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +19,8 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductImageRepository productImageRepository;
+    private final ImageUploadService imageUploadService;
 
     public List<Product> getAllActiveProducts() {
         return productRepository.findByIsActiveTrue();
@@ -75,5 +82,61 @@ public class ProductService {
             product.setStockQuantity(newStock);
             return productRepository.save(product);
         }).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+    }
+
+    @Transactional
+    public ProductImage addProductImage(Integer productId, MultipartFile file, Boolean isPrimary) throws IOException {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+
+        boolean hasPrimary = product.getImages() != null
+                && product.getImages().stream().anyMatch(img -> Boolean.TRUE.equals(img.getIsPrimary()));
+
+        if (!hasPrimary) {
+            isPrimary = true;
+        }
+
+        if (Boolean.TRUE.equals(isPrimary) && product.getImages() != null) {
+            product.getImages().forEach(img -> img.setIsPrimary(false));
+        }
+
+        String imageUrl = imageUploadService.uploadImage(file);
+        ProductImage productImage = ProductImage.builder()
+                .product(product)
+                .imageUrl(imageUrl)
+                .isPrimary(isPrimary)
+                .build();
+        return productImageRepository.save(productImage);
+    }
+
+    @Transactional
+    public void setPrimaryImage(Integer imageId) {
+        ProductImage image = productImageRepository.findById(imageId)
+                .orElseThrow(() -> new RuntimeException("Image not found with id: " + imageId));
+        Product product = image.getProduct();
+
+        if (product.getImages() != null) {
+            product.getImages().forEach(img -> img.setIsPrimary(img.getId().equals(imageId)));
+            productImageRepository.saveAll(product.getImages());
+        }
+    }
+
+    @Transactional
+    public void deleteProductImage(Integer imageId) {
+        ProductImage image = productImageRepository.findById(imageId)
+                .orElseThrow(() -> new RuntimeException("Image not found with id: " + imageId));
+        Integer productId = image.getProduct().getId();
+        boolean wasPrimary = Boolean.TRUE.equals(image.getIsPrimary());
+
+        productImageRepository.delete(image);
+
+        if (wasPrimary) {
+            List<ProductImage> remaining = productImageRepository.findByProductId(productId);
+            if (!remaining.isEmpty()) {
+                ProductImage nextPrimary = remaining.get(0);
+                nextPrimary.setIsPrimary(true);
+                productImageRepository.save(nextPrimary);
+            }
+        }
     }
 }

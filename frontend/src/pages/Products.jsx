@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import { Filter, ChevronDown, ShoppingBag } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { optimizeImageUrl } from '../utils/image';
+import { getPrimaryImageUrl } from '../utils/image';
 import { API_BASE } from '../api';
 import './Products.css';
 
@@ -41,11 +41,10 @@ export default function Products({ defaultCategory = null }) {
           !search &&
           list.length > 0 &&
           (defaultCategory === 'SUNGLASSES' || defaultCategory === 'MAGNETIC_GLASSES');
+        setProducts(list);
+        setLoading(false);
         if (skipListing) {
           navigate(`/products/${list[0].id}`, { replace: true });
-        } else {
-          setProducts(list);
-          setLoading(false);
         }
       })
       .catch(err => {
@@ -81,12 +80,13 @@ export default function Products({ defaultCategory = null }) {
               sortedProducts.map((product) => (
                 <div key={product.id} className="product-card glass-panel">
                   <div className="product-image-container">
-                    <img 
-                      src={product.images && product.images.length > 0 
-                        ? optimizeImageUrl(product.images.find(img => img.isPrimary)?.imageUrl || product.images[0].imageUrl)
-                        : "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&q=80&w=600"} 
-                      alt={product.name} 
+                    <img
+                      src={getPrimaryImageUrl(product, 600)}
+                      alt={product.name}
                       className="product-image"
+                      loading="lazy"
+                      width="600"
+                      height="600"
                     />
                     <div className="product-category-badge">{product.category}</div>
                   </div>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingBag, MessageCircle, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { optimizeImageUrl } from '../utils/image';
+import { optimizeImageUrl, sortImagesPrimaryFirst } from '../utils/image';
 import { API_BASE } from '../api';
 import './ProductDetails.css';
 
@@ -43,6 +43,8 @@ export default function ProductDetails() {
     return <div className="loading-state" style={{paddingTop: '120px'}}>Loading Details...</div>;
   }
 
+  const galleryImages = product ? sortImagesPrimaryFirst(product.images) : [];
+
   if (!product) {
     return (
       <div className="empty-state" style={{paddingTop: '120px'}}>
@@ -73,16 +75,18 @@ export default function ProductDetails() {
           </div>
           
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '12px' }}>
-            <h3 style={{ margin: 0 }}>Available Styles ({product.images ? product.images.length : 0})</h3>
+            <h3 style={{ margin: 0 }}>Available Styles ({galleryImages.length})</h3>
           </div>
           
           <div className="variant-gallery" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
-            {product.images && product.images.map((img) => (
+            {galleryImages.map((img, index) => (
               <div key={img.id} className="variant-card glass-panel" style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', aspectRatio: '1/1' }}>
                 <img 
                   src={optimizeImageUrl(img.imageUrl, 300)} 
-                  alt="Style Variant" 
-                  loading="lazy"
+                  alt={`${product.name} style ${index + 1}`}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  width="300"
+                  height="300"
                   style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block', cursor: 'pointer', background: '#fff' }} 
                   onClick={() => setFullScreenImage(img)}
                 />

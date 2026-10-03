@@ -11,6 +11,7 @@ export default function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [fullScreenImage, setFullScreenImage] = useState(null);
+  const [visibleCount, setVisibleCount] = useState(8);
   const { addToCart } = useCart();
 
   const navigateImage = (e, direction) => {
@@ -31,6 +32,7 @@ export default function ProductDetails() {
       })
       .then(data => {
         setProduct(data);
+        setVisibleCount(8);
         setLoading(false);
       })
       .catch(err => {
@@ -44,6 +46,7 @@ export default function ProductDetails() {
   }
 
   const galleryImages = product ? sortImagesPrimaryFirst(product.images) : [];
+  const visibleImages = galleryImages.slice(0, visibleCount);
 
   if (!product) {
     return (
@@ -79,7 +82,7 @@ export default function ProductDetails() {
           </div>
           
           <div className="variant-gallery" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
-            {galleryImages.map((img, index) => (
+            {visibleImages.map((img, index) => (
               <div key={img.id} className="variant-card glass-panel" style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', aspectRatio: '1/1' }}>
                 <img 
                   src={optimizeImageUrl(img.imageUrl, 300)} 
@@ -93,6 +96,16 @@ export default function ProductDetails() {
               </div>
             ))}
           </div>
+          {visibleCount < galleryImages.length && (
+            <div style={{ textAlign: 'center', marginTop: '24px' }}>
+              <button
+                className="btn btn-outline"
+                onClick={() => setVisibleCount((count) => count + 8)}
+              >
+                Load more styles ({galleryImages.length - visibleCount} remaining)
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

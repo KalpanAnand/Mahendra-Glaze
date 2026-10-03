@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { getPrimaryImageUrl } from '../utils/image';
+import { getPrimaryImageUrl, withPrimaryImageOnly } from '../utils/image';
 import { API_BASE } from '../api';
 import './Products.css';
 
@@ -11,10 +11,6 @@ export default function Products({ defaultCategory = null }) {
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState('newest'); // added sorting state
   const { addToCart } = useCart();
-  
-  const navigate = useNavigate();
-  
-  // Custom hook to parse query parameters
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const search = searchParams.get('search');
@@ -36,16 +32,9 @@ export default function Products({ defaultCategory = null }) {
         return res.json();
       })
       .then(data => {
-        const list = Array.isArray(data) ? data : [];
-        const skipListing =
-          !search &&
-          list.length > 0 &&
-          (defaultCategory === 'SUNGLASSES' || defaultCategory === 'MAGNETIC_GLASSES');
+        const list = (Array.isArray(data) ? data : []).map(withPrimaryImageOnly);
         setProducts(list);
         setLoading(false);
-        if (skipListing) {
-          navigate(`/products/${list[0].id}`, { replace: true });
-        }
       })
       .catch(err => {
         console.error("Failed to fetch products:", err);
@@ -77,11 +66,13 @@ export default function Products({ defaultCategory = null }) {
             {sortedProducts.length === 0 ? (
               <p className="empty-state">No products match your criteria.</p>
             ) : (
-              sortedProducts.map((product) => (
+              sortedProducts.map((product) => {
+                const listingImageUrl = getPrimaryImageUrl(product, 600);
+                return (
                 <div key={product.id} className="product-card glass-panel">
                   <div className="product-image-container">
                     <img
-                      src={getPrimaryImageUrl(product, 600)}
+                      src={listingImageUrl}
                       alt={product.name}
                       className="product-image"
                       loading="lazy"
@@ -108,7 +99,8 @@ export default function Products({ defaultCategory = null }) {
                     </div>
                   </div>
                 </div>
-              ))
+                );
+              })
             )}
           </div>
       </div>

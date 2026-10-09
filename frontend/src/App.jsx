@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -8,9 +9,14 @@ import AdminDashboard from './pages/AdminDashboard';
 import ContactUs from './pages/ContactUs';
 import CartSidebar from './components/CartSidebar';
 import { useCart } from './context/CartContext';
+import { wakeCatalog } from './api';
 
 function App() {
   const { isCartOpen, setIsCartOpen } = useCart();
+
+  useEffect(() => {
+    wakeCatalog();
+  }, []);
 
   return (
     <>

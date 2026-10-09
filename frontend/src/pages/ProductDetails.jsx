@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingBag, MessageCircle, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { optimizeImageUrl, sortImagesPrimaryFirst } from '../utils/image';
-import { API_BASE, fetchJson } from '../api';
+import { API_BASE, fetchJsonWithRetry } from '../api';
 import './ProductDetails.css';
 
 export default function ProductDetails() {
@@ -27,33 +27,31 @@ export default function ProductDetails() {
   };
 
   useEffect(() => {
-    const controller = new AbortController();
-    let cancelled = false;
+    let ignore = false;
 
     const loadProduct = async () => {
       setLoading(true);
       setError(null);
-      setProduct(null);
 
       try {
-        const data = await fetchJson(`${API_BASE}/api/products/${id}`, { signal: controller.signal });
-        if (cancelled) return;
+        const data = await fetchJsonWithRetry(`${API_BASE}/api/products/${id}`);
+        if (ignore) return;
         setProduct(data);
         setVisibleCount(8);
       } catch (err) {
-        if (cancelled || controller.signal.aborted) return;
+        if (ignore) return;
         console.error(err);
+        setProduct(null);
         setError(err);
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!ignore) setLoading(false);
       }
     };
 
     loadProduct();
 
     return () => {
-      cancelled = true;
-      controller.abort();
+      ignore = true;
     };
   }, [id, retryCount]);
 

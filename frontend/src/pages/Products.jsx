@@ -3,7 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { getPrimaryImageUrl, withPrimaryImageOnly } from '../utils/image';
-import { API_BASE, fetchJson } from '../api';
+import { API_BASE, fetchJsonWithRetry } from '../api';
 import './Products.css';
 
 export default function Products({ defaultCategory = null }) {
@@ -18,8 +18,7 @@ export default function Products({ defaultCategory = null }) {
   const search = searchParams.get('search');
 
   useEffect(() => {
-    const controller = new AbortController();
-    let cancelled = false;
+    let ignore = false;
 
     const loadProducts = async () => {
       setLoading(true);
@@ -33,25 +32,23 @@ export default function Products({ defaultCategory = null }) {
       }
 
       try {
-        const data = await fetchJson(url, { signal: controller.signal });
-        if (cancelled) return;
+        const data = await fetchJsonWithRetry(url);
+        if (ignore) return;
         const list = (Array.isArray(data) ? data : []).map(withPrimaryImageOnly);
         setProducts(list);
       } catch (err) {
-        if (cancelled || controller.signal.aborted) return;
+        if (ignore) return;
         console.error('Failed to fetch products:', err);
-        setProducts([]);
         setError(err.message || 'Unable to load products.');
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!ignore) setLoading(false);
       }
     };
 
     loadProducts();
 
     return () => {
-      cancelled = true;
-      controller.abort();
+      ignore = true;
     };
   }, [defaultCategory, search, retryCount]);
 
@@ -81,7 +78,7 @@ export default function Products({ defaultCategory = null }) {
 
         <div className="product-grid">
           {loading ? (
-            <p className="empty-state">Loading products…</p>
+            <p className="empty-state">Loading products… This can take a minute if the catalog is starting.</p>
           ) : error ? (
             <div className="empty-state products-error">
               <p>{error}</p>

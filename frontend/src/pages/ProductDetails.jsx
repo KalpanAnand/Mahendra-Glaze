@@ -3,13 +3,15 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingBag, MessageCircle, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { optimizeImageUrl, sortImagesPrimaryFirst } from '../utils/image';
-import { API_BASE } from '../api';
+import { API_BASE, fetchJson } from '../api';
 import './ProductDetails.css';
 
 export default function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
   const [fullScreenImage, setFullScreenImage] = useState(null);
   const [visibleCount, setVisibleCount] = useState(8);
   const { addToCart } = useCart();
@@ -25,24 +27,55 @@ export default function ProductDetails() {
   };
 
   useEffect(() => {
-    fetch(`${API_BASE}/api/products/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error("Not Found");
-        return res.json();
-      })
-      .then(data => {
+    const controller = new AbortController();
+    let cancelled = false;
+
+    const loadProduct = async () => {
+      setLoading(true);
+      setError(null);
+      setProduct(null);
+
+      try {
+        const data = await fetchJson(`${API_BASE}/api/products/${id}`, { signal: controller.signal });
+        if (cancelled) return;
         setProduct(data);
         setVisibleCount(8);
-        setLoading(false);
-      })
-      .catch(err => {
+      } catch (err) {
+        if (cancelled || controller.signal.aborted) return;
         console.error(err);
-        setLoading(false);
-      });
-  }, [id]);
+        setError(err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    loadProduct();
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, [id, retryCount]);
 
   if (loading) {
     return <div className="loading-state" style={{paddingTop: '120px'}}>Loading Details...</div>;
+  }
+
+  if (error && error.status !== 404) {
+    return (
+      <div className="empty-state" style={{paddingTop: '120px'}}>
+        <h2>Unable to load product</h2>
+        <p style={{marginTop: '12px'}}>{error.message}</p>
+        <button
+          type="button"
+          className="btn btn-primary"
+          style={{marginTop: '20px'}}
+          onClick={() => setRetryCount((count) => count + 1)}
+        >
+          Retry
+        </button>
+      </div>
+    );
   }
 
   const galleryImages = product ? sortImagesPrimaryFirst(product.images) : [];

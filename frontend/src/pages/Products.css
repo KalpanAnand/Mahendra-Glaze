@@ -93,6 +93,10 @@
   grid-column: 1 / -1;
 }
 
+.products-error p {
+  margin-bottom: 16px;
+}
+
 @media (max-width: 768px) {
   .products-page {
     padding-top: 100px;
